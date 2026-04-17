@@ -1,6 +1,6 @@
-#include <iostream>
+gi git #include<iostream>
 #include <algorithm>
-using namespace std;
+    using namespace std;
 
 // Mahnoor Arif
 // F2024376079
