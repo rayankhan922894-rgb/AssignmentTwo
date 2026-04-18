@@ -1,9 +1,9 @@
-gi git #include<iostream>
+#include <iostream>
 #include <algorithm>
-    using namespace std;
+using namespace std;
 
-// Mahnoor Arif
-// F2024376079
+// Raheem Ullah Khan
+// F2024376233
 
 /*
 =====================================================
@@ -11,54 +11,68 @@ Q1 – Arrays and Searching
 =====================================================
 
 Q1.A.1
-Contiguous memory allocation means that all elements
-of an array are stored in consecutive memory locations.
-This allows direct access using index which results in O(1) time.
+What is contiguous memory allocation? Why do arrays use it?
+What advantage does it provide?
+
+Answer:
+Contiguous memory allocation means elements are stored
+in adjacent memory locations. Arrays use this so any
+element can be accessed directly using index, giving O(1) access.
 
 -----------------------------------------------------
 
-Q1.A.2freed.
+Q1.A.2
+What is a memory leak? Give an example.
+
+Answer:
+A memory leak occurs when allocated memory is not freed.
 Example:
-int* data = new int[10];
-If we do not use delete[] data, memory is lost.
+int* arr = new int[10];
+If delete[] arr is not used, memory is wasted.
 
 -----------------------------------------------------
 
 Q1.A.3
-Static array has fixed size defined at compile time.
-Dynamic array is created at runtime using new.
-Fixed size is important because it cannot be changed later.
+Difference between static and dynamic array?
+
+Answer:
+Static array: fixed size at compile time.
+Dynamic array: size decided at runtime using new.
+Fixed size matters because it cannot grow/shrink.
 
 -----------------------------------------------------
 
 Q1.A.4
-Array elements are accessed using direct formula (base + index),
-so it is O(1). In linked lists, we must traverse nodes.
+Why array access is O(1)? Why not for linked list?
+
+Answer:
+Array uses direct index calculation → O(1).
+Linked list requires traversal → not O(1).
 */
 
-// Linear Search Implementation
-int linearSearchFunc(int arr[], int size, int key)
+// Q1.B.1 Linear Search
+int linearSearch(int arr[], int size, int key)
 {
     for (int i = 0; i < size; i++)
-    {
         if (arr[i] == key)
             return i;
-    }
+
     return -1;
 }
 
-// Function to find minimum and maximum
-void findExtremes(int arr[], int size, int &minimum, int &maximum)
+// Q1.B.2 Min & Max in one loop
+void findMinMax(int arr[], int size, int &minVal, int &maxVal)
 {
-    minimum = maximum = arr[0];
+    minVal = arr[0];
+    maxVal = arr[0];
 
     for (int i = 1; i < size; i++)
     {
-        if (arr[i] < minimum)
-            minimum = arr[i];
+        if (arr[i] < minVal)
+            minVal = arr[i];
 
-        if (arr[i] > maximum)
-            maximum = arr[i];
+        if (arr[i] > maxVal)
+            maxVal = arr[i];
     }
 }
 
@@ -68,57 +82,67 @@ Q2 – Bubble Sort
 =====================================================
 
 Q2.A.1
-Bubble sort works by comparing adjacent values and swapping them
-if they are not in correct order. After each pass, the largest
-value shifts to the end.
+Explain Bubble Sort.
+
+Answer:
+Bubble Sort compares adjacent elements and swaps them
+if they are in wrong order. After each pass, the largest
+element moves to the end like a bubble.
 
 -----------------------------------------------------
 
 Q2.A.2
-Best Case = O(n)
-Average Case = O(n^2)
-Worst Case = O(n^2)
-Optimized version stops when no swap happens.
+Time complexity?
+
+Answer:
+Best = O(n)
+Average = O(n^2)
+Worst = O(n^2)
+Optimized version stops early if sorted.
 
 -----------------------------------------------------
 
 Q2.A.3
-Selection sort reduces swaps.
-Bubble sort is simpler and easy to implement.
+Compare Bubble and Selection Sort.
+
+Answer:
+Selection Sort uses fewer swaps.
+Bubble Sort is easier to understand.
+Selection Sort is better when swaps are expensive.
 */
 
-void showArray(int arr[], int n)
+void printArray(int arr[], int size)
 {
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < size; i++)
         cout << arr[i] << " ";
     cout << endl;
 }
 
-void bubbleSortProcess(int arr[], int n, int &swapTotal)
+void bubbleSort(int arr[], int size, int &swapCount)
 {
-    swapTotal = 0;
+    swapCount = 0;
 
-    cout << "Array before sorting:\n";
-    showArray(arr, n);
+    cout << "Before Sorting: ";
+    printArray(arr, size);
 
-    for (int pass = 0; pass < n - 1; pass++)
+    for (int i = 0; i < size - 1; i++)
     {
-        bool didSwap = false;
+        bool swapped = false;
 
-        for (int j = 0; j < n - pass - 1; j++)
+        for (int j = 0; j < size - i - 1; j++)
         {
             if (arr[j] > arr[j + 1])
             {
                 swap(arr[j], arr[j + 1]);
-                swapTotal++;
-                didSwap = true;
+                swapCount++;
+                swapped = true;
             }
         }
 
-        cout << "After pass " << pass + 1 << ": ";
-        showArray(arr, n);
+        cout << "After Pass " << i + 1 << ": ";
+        printArray(arr, size);
 
-        if (!didSwap)
+        if (!swapped)
             break;
     }
 }
@@ -129,132 +153,144 @@ Q3 – Binary Search
 =====================================================
 
 Q3.A.1
-Binary search requires sorted data.
+Prerequisite?
+
+Answer:
+Array must be sorted.
 
 -----------------------------------------------------
 
 Q3.A.2
-Iteration 1: low=0 high=7 mid=3 → 12
-Iteration 2: low=4 high=7 mid=5 → 23 (found)
+Dry run:
+low=0 high=7 mid=3 → 12
+low=4 high=7 mid=5 → 23 FOUND
 
 -----------------------------------------------------
 
 Q3.A.3
-Linear search takes O(n).
-Binary search reduces search space → O(log n).
+Why faster than linear?
+
+Answer:
+Linear = O(n)
+Binary = O(log n)
+Binary halves the search space.
 */
 
-int binarySearchIterative(int arr[], int n, int key, int &count)
+int binarySearch(int arr[], int size, int key, int &iterations)
 {
-    int low = 0;
-    int high = n - 1;
-    count = 0;
+    int low = 0, high = size - 1;
+    iterations = 0;
 
     while (low <= high)
     {
-        count++;
+        iterations++;
         int mid = (low + high) / 2;
 
         if (arr[mid] == key)
             return mid;
-
-        if (arr[mid] < key)
+        else if (arr[mid] < key)
             low = mid + 1;
         else
             high = mid - 1;
     }
+
     return -1;
 }
 
 /*
 =====================================================
-Q4 – Complexity Analysis
+Q4 – Big O
 =====================================================
 
 Q4.A.1
-Big O notation represents how an algorithm performs
-as input size increases.
+What is Big O?
+
+Answer:
+It describes growth rate of algorithm.
 
 -----------------------------------------------------
 
 Q4.A.2
-Big O → worst case
-Big Omega → best case
-Big Theta → exact bound
+Difference?
+
+Answer:
+Big O = worst case
+Omega = best case
+Theta = exact
 
 -----------------------------------------------------
 
 Q4.A.3
-Order:
-O(1), O(log n), O(n), O(n log n), O(n^2)
+Ranking:
+O(1) < O(log n) < O(n) < O(n log n) < O(n^2)
 
 -----------------------------------------------------
 
 Q4.A.4
-Space complexity measures memory usage.
+Space Complexity?
+
+Answer:
+Extra memory used.
 Array of size n → O(n)
 
 -----------------------------------------------------
 
 Q4.A.5
-Hardware speed does not change complexity behavior.
-Better algorithm always wins for large data.
+Is faster computer better?
+
+Answer:
+No, algorithm complexity matters more.
 */
 
-void nestedExample(int arr[], int n)
+void nestedLoop(int arr[], int n)
 {
     // Outer loop runs n times
     // Inner loop runs n times
-    // Total operations = n * n → O(n^2)
+    // Total = n * n = n^2 → O(n^2)
 
     for (int i = 0; i < n; i++)
-    {
         for (int j = 0; j < n; j++)
-        {
             cout << arr[i] + arr[j] << " ";
-        }
-    }
     cout << endl;
 }
 
-void simpleLoop(int arr[], int n)
+void singleLoop(int arr[], int n)
 {
-    // Loop executes n times → O(n)
+    // Runs n times → O(n)
 
     for (int i = 0; i < n; i++)
-    {
         cout << arr[i] << " ";
-    }
     cout << endl;
 }
 
 /*
-Time Complexity Explanation:
-Each element of array A is checked against all elements of B.
-So total comparisons = n * n = O(n^2)
+Time Complexity:
+For each element in A → check all in B
+Total = n * n = O(n^2)
 
-Better solutions:
-1. Sort and apply binary search → O(n log n)
-2. Use hash table → O(n)
+Better:
+Sorting + Binary Search → O(n log n)
+Hashing → O(n)
 */
-bool verifyElements(int A[], int B[], int n)
+bool checkElements(int A[], int B[], int n)
 {
     for (int i = 0; i < n; i++)
     {
-        bool exists = false;
+        bool found = false;
 
         for (int j = 0; j < n; j++)
         {
             if (A[i] == B[j])
             {
-                exists = true;
+                found = true;
                 break;
             }
         }
 
-        if (!exists)
+        if (!found)
             return false;
     }
+
     return true;
 }
 
@@ -264,20 +300,29 @@ Q5 – Linked List
 =====================================================
 
 Q5.A.1
-A singly linked list consists of nodes linked using pointers.
-Memory is not continuous.
+What is linked list?
+
+Answer:
+Nodes connected using pointers.
+Memory is non-contiguous.
 
 -----------------------------------------------------
 
 Q5.A.2
-Insert at head → O(1)
-Insert at tail → O(n)
-Delete → O(n)
+Time complexities?
+
+Answer:
+Insert head = O(1)
+Insert tail = O(n)
+Delete = O(n)
 
 -----------------------------------------------------
 
 Q5.A.3
-If delete is not used, memory leak occurs.
+Without delete?
+
+Answer:
+Memory leak occurs.
 */
 
 struct Node
@@ -294,7 +339,6 @@ struct Node
 
 class LinkedList
 {
-private:
     Node *head;
 
 public:
@@ -303,33 +347,33 @@ public:
         head = nullptr;
     }
 
-    void insertFront(int val)
+    void insertAtHead(int val)
     {
-        Node *node = new Node(val);
-        node->next = head;
-        head = node;
+        Node *n = new Node(val);
+        n->next = head;
+        head = n;
     }
 
-    void insertBack(int val)
+    void insertAtTail(int val)
     {
-        Node *node = new Node(val);
+        Node *n = new Node(val);
 
-        if (head == nullptr)
+        if (!head)
         {
-            head = node;
+            head = n;
             return;
         }
 
         Node *temp = head;
-        while (temp->next != nullptr)
+        while (temp->next)
             temp = temp->next;
 
-        temp->next = node;
+        temp->next = n;
     }
 
-    void deleteNode(int val)
+    void deleteByValue(int val)
     {
-        if (head == nullptr)
+        if (!head)
             return;
 
         if (head->data == val)
@@ -344,9 +388,9 @@ public:
         while (temp->next && temp->next->data != val)
             temp = temp->next;
 
-        if (temp->next == nullptr)
+        if (!temp->next)
         {
-            cout << "Value not present\n";
+            cout << "Value not found\n";
             return;
         }
 
@@ -355,11 +399,10 @@ public:
         delete del;
     }
 
-    void printList()
+    void display()
     {
         Node *temp = head;
-
-        while (temp != nullptr)
+        while (temp)
         {
             cout << temp->data << " -> ";
             temp = temp->next;
@@ -370,75 +413,60 @@ public:
 
 int main()
 {
-    // Q1
-    int arr[10] = {4, 15, 7, 23, 1, 9, 42, 18, 6, 30};
+    int arr1[10] = {4, 15, 7, 23, 1, 9, 42, 18, 6, 30};
 
-    int idx = linearSearchFunc(arr, 10, 42);
+    cout << "Searching 42...\n";
+    int index = linearSearch(arr1, 10, 42);
 
-    if (idx != -1)
-        cout << "42 found at index: " << idx << endl;
+    if (index != -1)
+        cout << "Found at index: " << index << endl;
     else
-        cout << "42 not found\n";
+        cout << "Not found\n";
 
     int minVal, maxVal;
-    findExtremes(arr, 10, minVal, maxVal);
+    findMinMax(arr1, 10, minVal, maxVal);
 
-    cout << "Min value: " << minVal << endl;
-    cout << "Max value: " << maxVal << endl;
+    cout << "Min: " << minVal << " Max: " << maxVal << endl;
 
     cout << endl;
 
-    // Q2
     int arr2[7] = {64, 34, 25, 12, 22, 11, 90};
-    int totalSwaps;
-
-    bubbleSortProcess(arr2, 7, totalSwaps);
-    cout << "Total swaps performed: " << totalSwaps << endl;
-
-    cout << endl;
-
-    // Q3
-    int sortedArr[10] = {2, 5, 8, 12, 16, 23, 38, 45, 56, 72};
-    int steps;
-
-    cout << "Searching 56: Index = "
-         << binarySearchIterative(sortedArr, 10, 56, steps)
-         << ", Iterations = " << steps << endl;
-
-    cout << "Searching 100: Index = "
-         << binarySearchIterative(sortedArr, 10, 100, steps)
-         << ", Iterations = " << steps << endl;
+    int swaps;
+    bubbleSort(arr2, 7, swaps);
+    cout << "Total swaps: " << swaps << endl;
 
     cout << endl;
 
-    // Q4
+    int arr3[10] = {2, 5, 8, 12, 16, 23, 38, 45, 56, 72};
+    int iter;
+
+    cout << "Search 56: " << binarySearch(arr3, 10, 56, iter) << " Iter: " << iter << endl;
+    cout << "Search 100: " << binarySearch(arr3, 10, 100, iter) << " Iter: " << iter << endl;
+
+    cout << endl;
+
     int A[5] = {1, 2, 3, 4, 5};
     int B[5] = {5, 4, 3, 2, 1};
 
-    if (verifyElements(A, B, 5))
-        cout << "All elements of A exist in B\n";
-    else
-        cout << "Some elements are missing\n";
+    cout << (checkElements(A, B, 5) ? "All exist\n" : "Not all exist\n");
 
     cout << endl;
 
-    // Q5
     LinkedList list;
 
-    list.insertFront(10);
-    list.insertBack(20);
-    list.insertFront(5);
-    list.insertBack(30);
-    list.insertBack(40);
+    list.insertAtHead(10);
+    list.insertAtTail(20);
+    list.insertAtHead(5);
+    list.insertAtTail(30);
+    list.insertAtTail(40);
 
-    cout << "Initial List:\n";
-    list.printList();
+    list.display();
 
-    list.deleteNode(20);
-    list.deleteNode(100);
+    list.deleteByValue(20);
+    list.deleteByValue(100);
 
-    cout << "After Deletions:\n";
-    list.printList();
+    list.display();
 
     return 0;
 }
+//https://github.com/rayankhan922894-rgb/AssignmentTwo/blob/main/FIRST.CPP
